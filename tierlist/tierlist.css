@@ -7,7 +7,11 @@
 }
 #tiers-container {
     display: grid;
+	grid-template-rows: repeat(8,minmax(0,1fr));
+	max-height: 100%;
+	overflow: auto;
 }
+
 #tiers-container > div:first-child {
     border-width: 1px !important;
 }
@@ -25,6 +29,17 @@
     overflow-y: scroll;
 }
 
+.tier {
+    display: flex;
+    overflow: scroll;
+}
+
+.tier > div:first-child {
+    position: sticky;
+    left: 0;
+    background: white;
+}
+
 .multi-tier {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -34,6 +49,10 @@
     border-style: solid;
     border-width: 0px 1px 0px 0px;
     
+}
+
+.anime {
+    display: contents;
 }
 
 .anime > img {
