@@ -1,0 +1,82 @@
+:root {
+    color: white;
+    font-family: Verdana, Helvetica, sans-serif;
+    --primary: #0047AB;
+    --primary-hover: #00398A;
+    --unfocused: #282828;
+}
+
+h3 {
+    margin: 0;
+}
+
+h4 {
+    margin: 0;
+}
+
+body {
+    background: #262626;
+    width: 500px;
+    height: 400px;
+}
+
+img {
+    max-width: 125px;
+    border-radius: 0.5rem;
+}
+
+button {
+    color: white;
+    padding: 0.5rem;
+    border-radius: 0.5rem;
+    background: var(--primary);
+    box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+    border: none;
+    font-size: 16px;
+}
+
+button:hover {
+    cursor: pointer; 
+    background: var(--primary-hover);
+}
+
+span {
+    align-content: center;
+}
+
+input[type=number] {
+    -moz-appearance: textfield;
+    appearance: textfield;
+}
+
+input {
+    border-color: var(--unfocused);
+    border-width: 0 0 2px;
+
+    transition-property: border-color;
+    transition-duration: 150ms;
+    transition-timing-function: ease-in;
+
+    font-size: 16px;
+    color: white;
+    background-color: inherit;
+}
+
+input:focus {
+    outline: none;
+    border-color: var(--primary);
+}
+
+#container > * {
+    display: none;
+}
+
+#anime-watched-count {
+    border: none;
+}
+
+#anime-watched-count:focus {
+    outline: none;
+    border-width: 0 0 2px;
+    border-color: var(--primary-hover);
+}

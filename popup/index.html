@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title></title>
+        <link href="styles.css" rel="stylesheet">
+        <link href="../util.css" rel="stylesheet">
+        <script type="module" src="popup.js" defer></script> 
+    </head>
+    <body>
+        <div id="container">
+            <div id="setup">
+                <div class="section flex-col gap-2">
+                    <div class="flex flex-col">
+                        <h3>My Anime List Setup</h3>
+                        <div id="setup-login">
+
+                        </div>
+                    </div>
+                    <div class="flex flex-col">
+                        <h3>Anime Detection Setup</h3>
+                        <hr>
+                        <h4>Page Patterns</h4>
+                        <div id="setup-detection" class="flex flex-col gap-2">
+
+                        </div>
+
+                        <h4 class="mt-4">Title Processing</h4>
+                        <span class="sub-text">Replacements are applied to the matched key to create a query</span>
+                        <div id="setup-replacement" class="flex flex-col gap-2">
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="anime">
+                <div class="section flex-col">
+                    <h3>Currently Watching</h3>
+                    <div class="flex gap-2">
+                        <img id="anime-cover" alt="Anime cover art">
+                        <div class="flex flex-col gap-2">
+                            <h4 class="t-0" id="anime-name"></h4>
+                            <div>
+                                <button id="anime-info-incorrect" class="btn-link">Not watching this title?</button>
+                                <button id="anime-delete" class="btn-link">Delete Anime Info</button>
+                            </div>
+                            <div class="flex">
+                                <button id="anime-tracking-button"></button>
+                                <input type="number" class="mx-1 my-2" id="anime-watched-count">
+                                <span class="mx-1 my-2">/</span>
+                                <span id="anime-ep-count" class="mx-1 my-2"></span>
+                                <span class="mx-1 my-2">Episodes</span>
+                                <button id="anime-watched-count-edit" class="mx-1 my-2 btn-link">Edit</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="anime-missing">
+                <div class="section flex-col">
+                    <h3>Sorry, we couldn't find the anime your watching</h3>
+                    <label>
+                        Add anime by <a href="https://myanimelist.net">MAL</a> url:
+                        <input id="anime-missing-add-by-url" type="url">
+                </div>
+            </div>
+
+            <div id="page-not-matched">
+                <div class="section flex-col">
+                    <h3>This page is does not match the pattern</h3>
+                    <p>Navigate to a page that matches your pattern to get started tracking!</p>
+                </div>
+            </div>
+        </div>
+        <div>
+            <button id="settings-nav">Settings</button>
+            <button id="tier-nav">Tier List</button>
+        </div>
+
+    </body>
+</html>

@@ -1,0 +1,36 @@
+{
+  "manifest_version": 2,
+  "name": "Raphael",
+  "version": "1.0",
+
+  "description": "Tracks watched anime based on a regular expression based url parsing",
+
+  "permissions": [
+      "webNavigation",
+      "storage",
+      "tabs",
+      "identity",
+      "https://*.myanimelist.net/*"
+  ],
+
+  "background": {
+      "scripts": [
+          "raphael.js", "mal.js"
+      ],
+      "type": "module"
+  },
+
+  "browser_action": {
+      "default_title": "Raphael",
+      "default_popup": "popup/index.html"
+  },
+
+  "browser_specific_settings": {
+      "gecko": {
+          "id": "raphael@extension.org",
+          "strict_min_version": "42.0"
+      }
+
+  }
+}
+
