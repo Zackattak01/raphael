@@ -1,6 +1,8 @@
 import mal from "../mal.js";
 const backend = await browser.runtime.getBackgroundPage();
 
+renderRanks();
+
 const animeList = await mal.getAnimeList();
 console.log(animeList);
 
@@ -8,11 +10,8 @@ const unrankedAnime = {};
 const rankedAnime = {};
 mapAnimeObjects();
 
-
-renderRanks();
-
-
 renderUnrankedAnime();
+renderRankedAnime();
 
 function dragOverHandler(e) {
     e.preventDefault();
@@ -28,19 +27,18 @@ function mapAnimeObjects() {
             score: anime.list_status.score
         }
 
-        if (anime.score > 0)
+        if (mappedAnime.score > 0)
             rankedAnime[mappedAnime.id] = mappedAnime;
         else
             unrankedAnime[mappedAnime.id] = mappedAnime;
     }
-
 }
 
 function renderRanks() {
     const container = document.getElementById("tiers-container");
 
 
-    const dropHandler = (tier) => (e) => {
+    const dropHandler = (tier) => async (e) => {
         e.preventDefault();
 
         const id = e.dataTransfer.getData("text/plain");
@@ -50,6 +48,9 @@ function renderRanks() {
 
         if (animeContainer.parentElement !== tierContainer)
         {
+            await mal.updateAnimeList(id, { score: tier });
+            
+
             tierContainer.appendChild(animeContainer);
 
             if (unrankedAnime[id]) {
@@ -106,7 +107,7 @@ function renderUnrankedAnime() {
     const container = document.getElementById("unranked-container");
     container.textContent = "";
 
-    const dropHandler = (e) => {
+    const dropHandler = async (e) => {
         e.preventDefault();
 
         const id = e.dataTransfer.getData("text/plain");
@@ -115,6 +116,8 @@ function renderUnrankedAnime() {
 
         if (animeContainer.parentElement !== container)
         {
+            await mal.updateAnimeList(id, { score: 0 });
+
             if (rankedAnime[id]) {
                 const anime = rankedAnime[id];
                 rankedAnime[id] = undefined;
@@ -132,26 +135,47 @@ function renderUnrankedAnime() {
     container.removeEventListener("drop", dropHandler);
     container.addEventListener("drop", dropHandler);
 
-    const dragStartHandler = (id) => (e) => {
-        e.dataTransfer.setData("text/plain", id);
-    }
-
     let index = 0;
     const sortedAnime = Object.values(unrankedAnime).sort((a,b) => a.title.localeCompare(b.title));
     
     for (const anime of sortedAnime) {
         index++;
-        const animeContainer = document.createElement("div");
-        animeContainer.setAttribute("id", anime.id);
-        animeContainer.setAttribute("draggable", true);
-        animeContainer.classList.add("anime");
-        animeContainer.addEventListener("dragstart", dragStartHandler(anime.id));
 
-        const imgElement = document.createElement("img");
-        imgElement.setAttribute("src", anime.coverUrl);
-        imgElement.setAttribute("title", anime.title);
-
-        animeContainer.appendChild(imgElement);
+        const animeContainer = createAnimeElement(anime);
         container.appendChild(animeContainer);
     }
+}
+
+function renderRankedAnime() {
+    const animes = Object.values(rankedAnime);
+    for (const anime of animes) {
+        if (!anime.score > 0) {
+            console.error("Unranked anime in ranked collection");
+            continue;
+        }
+
+        const tierContainer = document.getElementById(anime.score);
+        const animeContainer = createAnimeElement(anime);
+        tierContainer.appendChild(animeContainer);
+    }
+}
+
+function createAnimeElement(anime) {
+    const dragStartHandler = (id) => (e) => {
+        e.dataTransfer.setData("text/plain", id);
+    }
+
+    const animeContainer = document.createElement("div");
+    animeContainer.setAttribute("id", anime.id);
+    animeContainer.setAttribute("draggable", true);
+    animeContainer.classList.add("anime");
+    animeContainer.addEventListener("dragstart", dragStartHandler(anime.id));
+
+    const imgElement = document.createElement("img");
+    imgElement.setAttribute("src", anime.coverUrl);
+    imgElement.setAttribute("title", anime.title);
+
+    animeContainer.appendChild(imgElement);
+
+    return animeContainer;
 }

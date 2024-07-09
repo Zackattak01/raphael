@@ -222,7 +222,12 @@ async function syncAnime (anime) {
             return;
         }
 
-        await mal.updateAnimeList(anime.malId, anime.eps.length, anime.eps.length === anime.epCount ? "completed" : "watching");
+        const options = {
+            epCount: anime.eps.length,
+            status: anime.eps.length === anime.epCount ? "completed" : "watching"
+        }
+
+        await mal.updateAnimeList(anime.malId, options);
     }
 }
 

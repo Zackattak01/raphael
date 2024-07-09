@@ -95,7 +95,7 @@ mal.authenticateUser = async () => {
 
     let resp = await fetch(tokenUrl, { method: "POST", body: reqBody });
     return await resp.json();
-};
+}
 
 mal.searchAnime = async (query) => {
     // mal appears to have an undocumented limit of the query length
@@ -138,15 +138,23 @@ mal.getAnimeList = async () => {
     return resp.data;
 }
 
-mal.updateAnimeList = async (animeId, numOfEps, status = "watching") => {
+mal.updateAnimeList = async (animeId, options) => {
     let url = apiUrl + `/anime/${animeId}/my_list_status`
 
     let reqBody = new URLSearchParams();
-    reqBody.append("status", status);
-    reqBody.append("num_watched_episodes", numOfEps);
+
+    if (options.status)
+        reqBody.append("status", options.status);
+
+    if (options.epCount)
+        reqBody.append("num_watched_episodes", options.epCount);
+
+    if (options.score >= 0 && options.score <= 10)
+        reqBody.append("score", options.score);
 
     return await makeRequest(url, { method: "PATCH", body: reqBody });
 }
+
 
 
 export default mal;
