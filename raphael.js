@@ -1,14 +1,13 @@
 import mal from "./mal.js";
 
-let regex = /aniwave\.to\/watch\/(?<key>.*)\..*\/ep-(?<ep>\d*)/;
+//                          w   d   h    m    s    ms
+const infoRefreshInterval = 1 * 7 * 24 * 60 * 60 * 1000;
+
 let storage = await browser.storage.local.get();
 var parsing;
 if (!storage.parsing) {
     storage.parsing = { pagePatterns: [], replacers: [] }
 }
-
-//if (storage.parsing.pagePatterns.length === 0)
-//    storage.parsing.pagePatterns.push(regex.source);
 
 await browser.storage.local.set(storage);
 parsing = storage.parsing;
@@ -75,7 +74,10 @@ window.setCurrentKeyByUrl = async (url) => {
 
     let id = mal.getIdFromUrl(url);
     if (!id)
+    {
+        console.error("Couldnt get id from url");
         return false;
+    }
 
 
     await mapMalInfoToAnime(lastAnime, id);
@@ -161,7 +163,8 @@ async function addEpisode(key, name, ep) {
         anime.eps.push(ep);
     }
 
-    if (!anime.malId)
+    let timeSinceInfoFetch = Date.now() - anime.infoFetchDate;
+    if (!anime.malId || !anime.infoFetchDate || timeSinceInfoFetch >= infoRefreshInterval)
         await mapMalInfoToAnime(anime);
 
 
@@ -232,6 +235,7 @@ async function syncAnime (anime) {
 }
 
 async function mapMalInfoToAnime(anime, id = null) {
+    console.log("remap");
     try {
         if (id === null && anime.malId)
             id = anime.malId
@@ -244,6 +248,8 @@ async function mapMalInfoToAnime(anime, id = null) {
 
 
         let malInfo = await mal.getAnime(id);
+
+        anime.infoFetchDate = Date.now();
 
         anime.malId = malInfo.id;
 
@@ -259,6 +265,7 @@ async function mapMalInfoToAnime(anime, id = null) {
             return;
 
         setEpisodeCount(anime, malInfo.my_list_status.num_episodes_watched);
+
 
     } catch (error) {
         anime.failedToSearchMalInfo = true;
